@@ -101,11 +101,12 @@ AND l.branch_name = 'Bangalore';
 select distinct customer_name
 from borrower, loan
 where borrower.loan_number = loan.loan_number
-and branch_name = 'SBI_chamrajpet'
+and branch_name = 'SBI_chamrajpet' or branch_name = 'SBI_Residencyroad'
 and (branch_name, customer_name ) in
 (select branch_name, customer_name
 from depositer, bankaccount
 where depositer.accno = bankaccount.accno);
+
 
 Select branch_name From Branch
 Where assets>(Select Sum(assets) from branch Where branch_city='Bangalore');
