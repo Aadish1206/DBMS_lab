@@ -85,27 +85,13 @@ where customer_name not in (select customer_name
 from depositer);
 
 
-SELECT DISTINCT  customer_name
-FROM bankcustomer c
-INNER JOIN depositer d
-  ON d.customer_name=c.customer_name
-inner join bankaccount a on d.accno = a.accno
- INNER JOIN borrower b
-  ON b.customer_name = c.customer_name
-INNER JOIN loan l
-  ON l.loan_number = b.loan_number
-WHERE l.branch_name = a.branch_name 
-AND l.branch_name = 'Bangalore';
-
-
-select distinct customer_name
-from borrower, loan
-where borrower.loan_number = loan.loan_number
-and branch_name = 'SBI_chamrajpet' or branch_name = 'SBI_Residencyroad'
-and (branch_name, customer_name ) in
-(select branch_name, customer_name
+Select customer_name
+From Borrower ,loan 
+Where borrower.loan_number=loan.loan_number
+and loan.branch_name in (select branch_name
 from depositer, bankaccount
-where depositer.accno = bankaccount.accno);
+where depositer.accno = bankaccount.accno And bankaccount.branch_name in
+ (Select branch_name from branch WHERE branch.branch_city='Bangalore')); 
 
 
 Select branch_name From Branch
