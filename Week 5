@@ -62,3 +62,9 @@ where empno in (select empno
         (select pno
         from project
         where ploc='Bengaluru' or ploc='Hyderabad' or ploc='Mysuru'));
+        
+        
+select empno
+From employee
+where Empno Not in (Select empno
+from Incentives);
