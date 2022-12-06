@@ -68,3 +68,11 @@ select empno
 From employee
 where Empno Not in (Select empno
 from Incentives);
+
+Select distinct employee.Ename,employee.Empno,employee.Deptno,
+assigned_to.Job_Role,Dept.Dloc,Project.Ploc
+From Employee,Assigned_to,Dept,Project
+Where Dept.Dloc=Project.Ploc
+ And DEPT.DEPTNO=Employee.Deptno
+ And Project.pno=Assigned_to.Pno 
+And Assigned_to.Empno=Employee.Empno ;
