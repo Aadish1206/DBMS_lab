@@ -1,0 +1,93 @@
+create database Airline_Flight;
+Use Airline_Flight;
+
+Create table Flights(flno int, fr_om varchar(20), t_o varchar(20),distance int,
+                     departs time, arrives time(0),price int(0),
+                     Primary Key (flno));
+drop table fLIGHTS;
+insert into Flights values(1,'Bengaluru','New Delhi',500,'6:00','9:00',5000);
+insert into Flights values(2,'Bengaluru','Chennai',300,'7:00','8:30',3000);
+insert into Flights values(3,'Trivandrum','New Delhi',800,'8:00','11:30',6000);
+insert into Flights values(4,'Bengaluru','Frankfurt',10000,'6:00','23:30',50000);
+insert into Flights values(5,'Kolkata','New Delhi',2400,'11:00','3:30',9000);
+insert into Flights values(6,'Bengaluru','Frankfurt',8000,'9:00','23:00',40000);
+
+create table aircraft(aid int, aname varchar(20),Cruising_range int,
+					  primary key (aid));
+                      
+insert into Aircraft Values (1,'Airbus',2000);
+insert into Aircraft Values (2,'Boeing',700);
+insert into Aircraft Values (3,'JetAirways',550);
+insert into Aircraft Values (4,'Indigo',5000);
+insert into Aircraft Values (5,'Boeing',4500);
+insert into Aircraft Values (6,'Airbus',2200);
+
+Create table employees( eid int, ename varchar(20), salary int, Primary key (eid));
+
+insert into employees values(101,'Avinash',50000);
+insert into employees values(102,'Lokesh',60000);
+insert into employees values(103,'Rakesh',70000);
+insert into employees values(104,'Santhosh',82000);
+insert into employees values(105,'Tilak',5000);
+
+create table certified( eid int, aid int, primary key (eid,aid),
+                        foreign key(eid) references employees (eid),
+                        foreign key(aid) references aircraft(aid));
+
+insert into certified values (101,2);
+insert into certified values (101,4);
+insert into certified values (101,5);
+insert into certified values (101,6);
+insert into certified values (102,1);
+insert into certified values (102,3);
+insert into certified values (102,5);
+insert into certified values (103,2);
+insert into certified values (103,3);
+insert into certified values (103,5);
+insert into certified values (103,6);
+insert into certified values (104,6);
+insert into certified values (104,1);
+insert into certified values (104,3);
+insert into certified values (105,3);
+
+
+
+Select Aname From Aircraft a,certified c
+Where a.aid=c.aid AND c.eid= 
+(Select eid From Employees WHere Salary>80000);
+
+SELECT c.eid, MAX(cruising_range) FROM certified c,aircraft a
+WHERE c.aid=a.aid AND
+c.eid in (Select eid from certified
+GROUP BY eid
+HAVING COUNT(eid)>=3)
+Group BY eid;
+
+
+SELECT  e.ename FROM employees e
+WHERE e.salary<
+(SELECT MIN(f.price)
+FROM flights f
+WHERE f.fr_om='Bengaluru'
+AND f.t_o='Frankfurt');
+
+SELECT a.aid,a.aname,AVG(e.salary)
+FROM aircraft a,certified c,employees e
+WHERE a.aid=c.aid
+AND c.eid=e.eid
+AND a.cruising_range>1000
+GROUP BY a.aid,a.aname;
+
+SELECT DISTINCT  E.ename 
+FROM  Employees E, Certified C, Aircraft A  
+WHERE  E.eid = C.eid 
+AND C.aid = A.aid 
+AND A.aname ='Boeing';
+
+SELECT a.aid
+FROM aircraft a
+WHERE a.cruising_range>
+(SELECT MIN(f.distance)
+FROM flights f
+WHERE f.fr_om='Bengaluru'
+AND f.t_o='New Delhi');
